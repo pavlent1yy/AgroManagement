@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Учет работы техники')}"></head>
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<main class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title mb-0">Учет работы техники</h1>
+        <a th:href="@{/mechanic/dashboard}" class="btn btn-outline-secondary">Назад</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card form-card">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Новая запись</h2>
+                    <form th:action="@{/mechanic/work}" th:object="${workRecordForm}" method="post">
+                        <div class="mb-3">
+                            <label for="equipmentId" class="form-label">Техника</label>
+                            <select id="equipmentId" th:field="*{equipmentId}" class="form-select"
+                                    th:classappend="${#fields.hasErrors('equipmentId')} ? 'is-invalid'">
+                                <option value="">Выберите технику</option>
+                                <option th:each="item : ${equipment}" th:value="${item.id}"
+                                        th:text="${item.name + ' — ' + item.type}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('equipmentId')}" th:errors="*{equipmentId}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hours" class="form-label">Моточасы</label>
+                            <input id="hours" th:field="*{hours}" type="number" step="0.01" min="0.01" class="form-control"
+                                   th:classappend="${#fields.hasErrors('hours')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('hours')}" th:errors="*{hours}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fuelConsumed" class="form-label">Расход топлива, л</label>
+                            <input id="fuelConsumed" th:field="*{fuelConsumed}" type="number" step="0.01" min="0" class="form-control"
+                                   th:classappend="${#fields.hasErrors('fuelConsumed')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('fuelConsumed')}" th:errors="*{fuelConsumed}"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="recordDate" class="form-label">Дата</label>
+                            <input id="recordDate" th:field="*{recordDate}" type="date" class="form-control"
+                                   th:classappend="${#fields.hasErrors('recordDate')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('recordDate')}" th:errors="*{recordDate}"></div>
+                        </div>
+                        <button class="btn btn-success w-100" type="submit">Сохранить запись</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card form-card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle table-agro mb-0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Техника</th>
+                                <th>Моточасы</th>
+                                <th>Топливо, л</th>
+                                <th>Дата</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="record : ${workRecords}">
+                                <td th:text="${record.id}"></td>
+                                <td class="fw-semibold" th:text="${record.equipment.name}"></td>
+                                <td th:text="${record.hours}"></td>
+                                <td th:text="${record.fuelConsumed}"></td>
+                                <td th:text="${#temporals.format(record.recordDate, 'dd.MM.yyyy')}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(workRecords)}">
+                                <td colspan="5" class="text-center text-muted py-4">Записи о работе техники отсутствуют.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head('Панель администратора')}"></head>
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<main class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title mb-0">Панель администратора</h1>
+        <span class="badge text-bg-success">Роль: Администратор</span>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body p-4">
+                    <div class="card-icon bg-success">👥</div>
+                    <h2 class="h5">Управление пользователями</h2>
+                    <p class="text-muted">Добавление, редактирование, блокировка и назначение ролей.</p>
+                    <a th:href="@{/admin/users}" class="btn btn-success">Открыть</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body p-4">
+                    <div class="card-icon bg-secondary">📋</div>
+                    <h2 class="h5">Журнал аудита</h2>
+                    <p class="text-muted">Последние действия пользователей в информационной системе.</p>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditModal">
+                        Просмотреть
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body p-4">
+                    <div class="card-icon bg-dark">💾</div>
+                    <h2 class="h5">Резервное копирование</h2>
+                    <p class="text-muted">Создание SQL-копии базы данных PostgreSQL средствами pg_dump.</p>
+                    <form th:action="@{/admin/backup}" method="post">
+                        <button class="btn btn-outline-dark" type="submit">Создать копию</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="auditModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fs-5">Журнал аудита</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover align-middle" th:if="${not #lists.isEmpty(recentAudits)}">
+                    <thead>
+                    <tr>
+                        <th>Дата и время</th>
+                        <th>Событие</th>
+                        <th>Описание</th>
+                        <th>Пользователь</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="audit : ${recentAudits}">
+                        <td th:text="${#temporals.format(audit.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                        <td><span class="badge text-bg-light" th:text="${audit.eventType}"></span></td>
+                        <td th:text="${audit.description}"></td>
+                        <td th:text="${audit.username}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:if="${#lists.isEmpty(recentAudits)}" class="alert alert-light border mb-0">
+                    Журнал аудита пока пуст.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

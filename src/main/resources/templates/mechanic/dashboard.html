@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Кабинет механика')}"></head>
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<main class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title mb-0">Кабинет механика</h1>
+        <span class="badge text-bg-success">Роль: Механик</span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body p-4">
+                    <div class="card-icon bg-success">🚜</div>
+                    <h2 class="h5">Учет работы техники</h2>
+                    <p class="text-muted">Регистрация моточасов и расхода топлива.</p>
+                    <a th:href="@{/mechanic/work}" class="btn btn-success">Открыть</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body p-4">
+                    <div class="card-icon bg-danger">🔧</div>
+                    <h2 class="h5">Заявки на ремонт</h2>
+                    <p class="text-muted">Оформление заявок по неисправностям техники.</p>
+                    <button class="btn btn-outline-danger" type="button" disabled>Открыть</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body p-4">
+                    <div class="card-icon bg-secondary">📜</div>
+                    <h2 class="h5">История ремонтов</h2>
+                    <p class="text-muted">Архив выполненных ремонтных работ.</p>
+                    <button class="btn btn-outline-secondary" type="button" disabled>Открыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

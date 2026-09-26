@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Планирование посевов')}"></head>
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<main class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title mb-0">Планирование посевных работ</h1>
+        <a th:href="@{/agronomist/dashboard}" class="btn btn-outline-secondary">Назад</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card form-card">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Новый план</h2>
+                    <form th:action="@{/agronomist/planning}" th:object="${fieldPlanForm}" method="post">
+                        <div class="mb-3">
+                            <label for="culture" class="form-label">Культура</label>
+                            <input id="culture" th:field="*{culture}" type="text" class="form-control"
+                                   placeholder="Например: пшеница озимая"
+                                   th:classappend="${#fields.hasErrors('culture')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('culture')}" th:errors="*{culture}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fieldName" class="form-label">Поле</label>
+                            <input id="fieldName" th:field="*{fieldName}" type="text" class="form-control"
+                                   placeholder="Например: Северное-12"
+                                   th:classappend="${#fields.hasErrors('fieldName')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('fieldName')}" th:errors="*{fieldName}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="area" class="form-label">Площадь, га</label>
+                            <input id="area" th:field="*{area}" type="number" step="0.01" min="0.01" class="form-control"
+                                   th:classappend="${#fields.hasErrors('area')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="season" class="form-label">Сезон</label>
+                            <input id="season" th:field="*{season}" type="text" class="form-control"
+                                   placeholder="Например: 2026"
+                                   th:classappend="${#fields.hasErrors('season')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('season')}" th:errors="*{season}"></div>
+                        </div>
+                        <button class="btn btn-success w-100" type="submit">Сохранить план</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card form-card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle table-agro mb-0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Культура</th>
+                                <th>Поле</th>
+                                <th>Площадь, га</th>
+                                <th>Сезон</th>
+                                <th>Автор</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="plan : ${plans}">
+                                <td th:text="${plan.id}"></td>
+                                <td class="fw-semibold" th:text="${plan.culture}"></td>
+                                <td th:text="${plan.fieldName}"></td>
+                                <td th:text="${plan.area}"></td>
+                                <td th:text="${plan.season}"></td>
+                                <td th:text="${plan.createdBy}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(plans)}">
+                                <td colspan="6" class="text-center text-muted py-4">Планы посевных работ пока не созданы.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

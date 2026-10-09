@@ -2,6 +2,8 @@ package com.pavlent1yy.agro_management.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,7 +26,8 @@ public class WarehouseOperation {
     private WarehouseItem item;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "operation_type", nullable = false, length = 20)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(name = "operation_type", nullable = false, columnDefinition = "warehouse_operation_type")
     private OperationType operationType;
 
     @Column(nullable = false, precision = 12, scale = 2)

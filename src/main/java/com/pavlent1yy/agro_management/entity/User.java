@@ -2,6 +2,8 @@ package com.pavlent1yy.agro_management.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,16 +34,12 @@ public class User implements UserDetails {
     private String fullName;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(nullable = false, columnDefinition = "user_role")
     private Role role;
 
-    @Setter
     @Column(nullable = false)
-    private static boolean active;
-
-    public void setActive(boolean active){
-        this.active = active;
-    }
+    private boolean active;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
